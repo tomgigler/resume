@@ -19,63 +19,56 @@
   "summary": "A concise professional summary goes here. Use it to establish the themes that the experience section then proves with concrete examples.",
   "experience": [
     {
-      "company": "Example Company",
-      "title": "Senior Software Engineer",
-      "dates": "2022–Present",
+      "company": "Esri",
+      "title": "Group Software Development Lead • Software Product Development",
+      "dates": "2016-Present",
       "bullets": [
-        {
-          "text": "Designed a reusable internal tool that separated configuration from implementation so teams could adopt it without maintaining custom forks.",
-          "link": {
-            "label": "View supporting work",
-            "url": "https://example.com/project"
-          }
-        },
-        "Improved a recurring engineering workflow by replacing manual steps with tested automation and documented ownership."
+        "Lead a platform engineering team responsible for developer infrastructure and engineering productivity across build, CI/CD, artifact management, source control, and internal developer tooling",
+        "Consolidated 60+ Visual Studio solutions spanning roughly 600 projects and dozens of teams into a single, generated solution, reducing production build time by more than 50%",
+        "Emphasize durable technical ownership within the team, enabling engineers to lead systems, onboard others, and make decisions without unnecessary management bottlenecks",
+        "Promoted from Team Lead to Group Lead in 2026"
       ]
     },
     {
-      "company": "Previous Company",
-      "title": "Software Engineer",
-      "dates": "2018–2022",
+      "company": "Esri",
+      "title": "Platform Programmer",
+      "dates": "2002-2015",
       "bullets": [
-        "Built and maintained developer tooling used across multiple engineering teams.",
-        "Partnered with developers and operations teams to improve reliability, repeatability, and developer experience."
+        "Built and maintained automated build and release systems for major software products across Windows, Linux, Solaris, AIX, HP-UX, and Tru64 environments",
+        "Developed build and dependency tooling for large, highly interdependent codebases, partnering with development, QA, release engineering, and infrastructure teams to improve automation, reliability, and repeatability"
       ]
     }
-  ],
-  "projects": [
+],
+  "projects-disabled": [
     {
-      "name": "Example Project",
-      "url": "https://github.com/example/project",
-      "description": "A public project that demonstrates relevant engineering decisions and provides supporting evidence for the resume."
-    }
-  ],
-  "skills": [
-    {
-      "label": "Platform & Tooling",
-      "items": ["Git", "CI/CD", "Developer Tooling"]
+      "name": "GiggleCheckBox",
+      "url": "https://github.com/tomgigler/GiggleCheckBox",
+      "description": "Reusable checklist system built around templates, runs, locations, assets, dependencies, tags, attachments, and auditable checklist activity"
     },
     {
-      "label": "Languages & Scripting",
-      "items": ["Python", "PowerShell"]
+      "name": "GiggleMe",
+      "url": "https://github.com/tomgigler/GiggleMe",
+      "description": "Long-running Discord automation project with scheduled content, templates, database-backed workflows, web tooling, and service-based deployment"
     },
     {
-      "label": "Engineering Focus",
-      "items": ["Automation", "Platform Engineering", "Developer Experience"]
+      "name": "GiggleMod",
+      "url": "https://github.com/tomgigler/GiggleMod",
+      "description": "Discord moderation tooling focused on maintainability, service deployment, and modern command workflows"
     }
   ],
+  "skills": ["Git · GitHub/GHES Administration · Jenkins · Developer Tooling/Platform Engineering" ],
   "education": [
     {
-      "school": "Example University",
-      "degree": "B.S., Computer Science",
-      "dates": "2018",
-      "detail": {
-        "text": "Capstone project later used as a teaching example in the department.",
-        "link": {
-          "label": "University archive",
-          "url": "https://example.edu/archive/project"
-        }
-      }
+      "school": "California State University, San Bernardino",
+      "degree": "M.S., Computer Science",
+      "dates": "2006-2008",
+      "detail": "Graduate project: Moops — a web implementation of the Personal Software Process reporting system that was later required for undergraduate Software Engineering students"
+    },
+    {
+      "school": "[California State University, San Bernardino]",
+      "degree": "B.S., Computer Science, with honors",
+      "dates": "2000-2002",
+      "detail": "Outstanding Undergraduate Student, Computer Science Department"
     }
   ]
 }
