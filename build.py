@@ -11,7 +11,6 @@ import html
 import json
 import re
 import shutil
-import sys
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -68,8 +67,42 @@ def link(label: str, url: str) -> str:
     return f'<a href="{safe_url(url)}">{text(label)}</a>'
 
 
+def render_optional_linked_text(value: object, context: str) -> str:
+    """Render either a plain string or {text, link:{label,url}}.
+
+    This keeps older string-only resume data valid while allowing selected
+    statements to point to supporting evidence without embedding HTML in JSON.
+    """
+    if isinstance(value, str):
+        return text(value.strip())
+
+    if not isinstance(value, dict):
+        fail(f"{context} must be a string or an object")
+
+    body = str(value.get("text") or "").strip()
+    if not body:
+        fail(f"{context} object must define non-empty 'text'")
+
+    rendered = text(body)
+    link_data = value.get("link")
+    if link_data is None:
+        return rendered
+    if not isinstance(link_data, dict):
+        fail(f"{context} 'link' must be an object")
+
+    label = str(link_data.get("label") or "").strip()
+    url = str(link_data.get("url") or "").strip()
+    if not label or not url:
+        fail(f"{context} link must define non-empty 'label' and 'url'")
+
+    return f'{rendered} <span class="supporting-link">· {link(label, url)}</span>'
+
+
 def render_contact(resume: dict) -> str:
     contact = resume.get("contact") or {}
+    if not isinstance(contact, dict):
+        fail("resume.json 'contact' must be an object")
+
     items: list[str] = []
 
     email = str(contact.get("email") or "").strip()
@@ -80,11 +113,18 @@ def render_contact(resume: dict) -> str:
     if location:
         items.append(f'<span>{text(location)}</span>')
 
-    for item in contact.get("links") or []:
+    links = contact.get("links") or []
+    if not isinstance(links, list):
+        fail("resume.json contact.links must be an array")
+    for index, item in enumerate(links):
+        if not isinstance(item, dict):
+            fail(f"resume.json contact.links[{index}] must be an object")
         label = str(item.get("label") or "").strip()
         url = str(item.get("url") or "").strip()
         if label and url:
             items.append(link(label, url))
+        elif label or url:
+            fail(f"resume.json contact.links[{index}] must define both label and url")
 
     if not items:
         return ""
@@ -112,9 +152,21 @@ def render_experience(resume: dict, site: dict) -> str:
     roles = resume.get("experience") or []
     if not roles:
         return ""
+    if not isinstance(roles, list):
+        fail("resume.json 'experience' must be an array")
+
     rendered = []
-    for role in roles:
-        bullets = "\n".join(f"          <li>{text(item)}</li>" for item in role.get("bullets") or [])
+    for role_index, role in enumerate(roles):
+        if not isinstance(role, dict):
+            fail(f"resume.json experience[{role_index}] must be an object")
+
+        bullet_values = role.get("bullets") or []
+        if not isinstance(bullet_values, list):
+            fail(f"resume.json experience[{role_index}].bullets must be an array")
+        bullets = "\n".join(
+            f"          <li>{render_optional_linked_text(item, f'experience[{role_index}].bullets[{bullet_index}]')}</li>"
+            for bullet_index, item in enumerate(bullet_values)
+        )
         bullet_list = f"\n        <ul>\n{bullets}\n        </ul>" if bullets else ""
         rendered.append(f"""      <article class="role">
         <div class="role-heading">
@@ -136,8 +188,13 @@ def render_projects(resume: dict, site: dict) -> str:
     projects = resume.get("projects") or []
     if not projects:
         return ""
+    if not isinstance(projects, list):
+        fail("resume.json 'projects' must be an array")
+
     cards = []
-    for project in projects:
+    for index, project in enumerate(projects):
+        if not isinstance(project, dict):
+            fail(f"resume.json projects[{index}] must be an object")
         name = text(project.get("name"))
         url = str(project.get("url") or "").strip()
         title = link(str(project.get("name") or ""), url) if url else name
@@ -154,12 +211,37 @@ def render_projects(resume: dict, site: dict) -> str:
 
 
 def render_skills(resume: dict, site: dict) -> str:
-    skills = [str(item).strip() for item in resume.get("skills") or [] if str(item).strip()]
-    if not skills:
+    raw_skills = resume.get("skills") or []
+    if not raw_skills:
         return ""
+    if not isinstance(raw_skills, list):
+        fail("resume.json 'skills' must be an array")
+
+    if all(isinstance(item, str) for item in raw_skills):
+        skills = [item.strip() for item in raw_skills if item.strip()]
+        if not skills:
+            return ""
+        content = f'<p class="skills">{" · ".join(text(item) for item in skills)}</p>'
+    elif all(isinstance(item, dict) for item in raw_skills):
+        groups = []
+        for index, group in enumerate(raw_skills):
+            label = str(group.get("label") or "").strip()
+            items = group.get("items") or []
+            if not label:
+                fail(f"resume.json skills[{index}] must define non-empty 'label'")
+            if not isinstance(items, list) or not items or not all(isinstance(item, str) and item.strip() for item in items):
+                fail(f"resume.json skills[{index}].items must be a non-empty array of strings")
+            groups.append(f"""        <div class="skill-group">
+          <span class="skill-group-label">{text(label)}</span>
+          <span class="skill-group-items">{' · '.join(text(item.strip()) for item in items)}</span>
+        </div>""")
+        content = f'<div class="skill-groups">\n{chr(10).join(groups)}\n      </div>'
+    else:
+        fail("resume.json 'skills' must contain either only strings or only grouped skill objects")
+
     return f"""    <section>
       <h2>{section_heading(site, 'skills')}</h2>
-      <p class="skills">{' · '.join(text(item) for item in skills)}</p>
+      {content}
     </section>"""
 
 
@@ -167,10 +249,17 @@ def render_education(resume: dict, site: dict) -> str:
     items = resume.get("education") or []
     if not items:
         return ""
+    if not isinstance(items, list):
+        fail("resume.json 'education' must be an array")
+
     rendered = []
-    for item in items:
-        detail = str(item.get("detail") or "").strip()
-        detail_html = f'\n          <p class="detail">{text(detail)}</p>' if detail else ""
+    for index, item in enumerate(items):
+        if not isinstance(item, dict):
+            fail(f"resume.json education[{index}] must be an object")
+        detail = item.get("detail")
+        detail_html = ""
+        if detail:
+            detail_html = f'\n          <p class="detail">{render_optional_linked_text(detail, f"education[{index}].detail")}</p>'
         rendered.append(f"""      <article class="education">
         <div>
           <h3>{text(item.get('school'))}</h3>
@@ -213,9 +302,11 @@ def render_body(resume: dict, site: dict) -> str:
     }
 
     requested_sections = site.get("sections") or ["summary", "experience", "projects", "skills", "education"]
+    if not isinstance(requested_sections, list):
+        fail("site.json 'sections' must be an array")
     unknown = [item for item in requested_sections if item not in ALLOWED_SECTIONS]
     if unknown:
-        fail(f"site.json contains unsupported section name(s): {', '.join(unknown)}")
+        fail(f"site.json contains unsupported section name(s): {', '.join(str(item) for item in unknown)}")
 
     sections = [renderers[key](resume, site) for key in requested_sections]
     sections = [value for value in sections if value]
@@ -228,7 +319,7 @@ def render_body(resume: dict, site: dict) -> str:
 
 def structured_data(resume: dict, site: dict) -> str:
     contact = resume.get("contact") or {}
-    same_as = [item.get("url") for item in contact.get("links") or [] if item.get("url")]
+    same_as = [item.get("url") for item in contact.get("links") or [] if isinstance(item, dict) and item.get("url")]
     data = {
         "@context": "https://schema.org",
         "@type": "Person",
@@ -264,6 +355,14 @@ def validate_site(site: dict) -> tuple[str, str]:
     return url, accent
 
 
+def favicon_text(resume: dict, site: dict) -> str:
+    configured = str(site.get("faviconText") or "").strip()
+    value = configured or require(resume, "name", "resume.json").strip()[0]
+    if len(value) > 2:
+        fail("site.json 'faviconText' must be one or two characters")
+    return value
+
+
 def build(resume_path: Path, site_path: Path, output: Path) -> None:
     resume = load_json(resume_path)
     site = load_json(site_path)
@@ -293,8 +392,17 @@ def build(resume_path: Path, site_path: Path, output: Path) -> None:
     output.mkdir(parents=True)
     shutil.copytree(STATIC_DIR, output / "assets")
 
+    favicon_template = (TEMPLATE_DIR / "favicon.svg").read_text(encoding="utf-8")
+    icon_text = favicon_text(resume, site)
+    favicon = replace_tokens(favicon_template, {
+        "ACCENT_COLOR": accent,
+        "FAVICON_TEXT": text(icon_text),
+        "FAVICON_FONT_SIZE": "38" if len(icon_text) == 1 else "29",
+    })
+
     (output / "index.html").write_text(index, encoding="utf-8")
     (output / "404.html").write_text(not_found, encoding="utf-8")
+    (output / "assets" / "favicon.svg").write_text(favicon, encoding="utf-8")
     (output / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {url}/sitemap.xml\n", encoding="utf-8")
     (output / "sitemap.xml").write_text(
         '<?xml version="1.0" encoding="UTF-8"?>\n'

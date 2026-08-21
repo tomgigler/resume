@@ -2,94 +2,61 @@
 
 A small, dependency-free resume and professional portfolio site that keeps content separate from presentation.
 
-The live site for this repository is intended to be **https://resume.tomgigler.com**. The project is also designed to be easy to reuse: edit two JSON files, run one Python script, and deploy the generated static files wherever you like.
-
-## Why it is structured this way
-
-Resume content does not belong welded into a pile of HTML. This project separates the pieces:
-
-- `resume.json` contains the person's resume content.
-- `site.json` contains site-level settings such as URL, title, section order, and accent color.
-- `template/` contains the HTML shells.
-- `static/` contains reusable CSS and the favicon.
-- `build.py` combines those pieces into a plain static site in `dist/`.
-
-There are no runtime dependencies, no package manager, and no application server. Production is just HTML and CSS.
+The repository is designed to work well as a GitHub template: customize JSON, run one Python script, and deploy the generated static files wherever you like. The default branch intentionally contains only example data.
 
 ## Quick start
 
-Python 3.9+ is sufficient.
+Python 3.9+ is sufficient. The GitHub Actions workflow currently builds with Python 3.11.
+
+### Windows / PowerShell
+
+```powershell
+py -3.11 build.py
+py -3.11 -m http.server 8000 -d dist
+```
+
+### Linux / macOS
 
 ```bash
 python3 build.py
 python3 -m http.server 8000 -d dist
 ```
 
-Then open:
-
-```text
-http://127.0.0.1:8000
-```
+Then open `http://127.0.0.1:8000`.
 
 Every build recreates `dist/` from scratch.
 
-## Customize your resume
+## What to customize
 
-For normal changes, you should rarely need to edit HTML.
+Most users should only need to edit two files:
 
-### 1. Edit `resume.json`
+- `resume.json` contains resume content.
+- `site.json` contains presentation and site settings.
 
-This contains:
+The repository also contains `resume.example.json` and `site.example.json` as clean reference copies.
 
-- name, headline, and optional eyebrow text
-- contact information and links
-- professional summary
-- experience
-- selected projects
-- skills
-- education
+See [SCHEMA.md](SCHEMA.md) for the supported JSON formats, including optional evidence links, grouped skills, section ordering, and favicon customization.
 
-Empty optional values are omitted from the generated page.
+## Why it is structured this way
 
-`resume.example.json` contains a generic example that can be copied when reusing the project.
+Resume content does not belong welded into HTML. This project separates:
 
-### 2. Edit `site.json`
+- **content** — `resume.json`
+- **site configuration** — `site.json`
+- **presentation** — `template/` and `static/`
+- **build** — `build.py`
+- **deployable artifact** — `dist/`
+- **deployment mechanics** — `deploy/`
 
-This contains:
+Production is plain HTML, CSS, SVG, and metadata. There is no application server, database, package manager, or client-side framework required to display the resume.
 
-- canonical site URL
-- page title and search description
-- accent color
-- print-button settings
-- last-updated text
-- section order
-- section labels
-
-The `sections` array controls both visibility and order. For example:
-
-```json
-"sections": ["summary", "experience", "projects", "skills", "education"]
-```
-
-Remove a section from the array to hide it, or rearrange the values to change the page order.
-
-`site.example.json` contains generic settings for reuse.
-
-### 3. Change the look only if you want to
-
-Most visual changes belong in `static/styles.css` and `static/print.css`.
-
-The primary accent color can be changed without touching CSS:
-
-```json
-"accentColor": "#214f7b"
-```
+See [DESIGN.md](DESIGN.md) for the design decisions and intentionally omitted complexity.
 
 ## Print / PDF
 
-The generated resume includes a **Print / Save PDF** button by default. Printing uses `static/print.css`, which strips the screen-only presentation and formats the resume for US Letter paper.
+The generated resume includes a **Print / Save PDF** button by default. Printing uses `static/print.css`, which removes screen-only presentation and formats the resume for US Letter paper.
 
-This keeps the HTML resume as the source of truth instead of maintaining a separate PDF that inevitably becomes six bullet points out of date.
+This keeps the HTML resume as the source of truth rather than maintaining a separate PDF that slowly disagrees with it.
 
 Set this in `site.json` to hide the button:
 
@@ -113,35 +80,68 @@ dist/
     └── styles.css
 ```
 
-`dist/` is intentionally ignored by Git. The repository tracks the source of the site, not generated copies of it.
+`dist/` is intentionally ignored by Git. The repository tracks the source of the site, not generated copies.
 
-## Deploy to Ubuntu / Apache
+## GitHub Actions
 
-The helper scripts are intentionally simple and optional.
+`.github/workflows/build.yml` runs on every push and pull request. It:
 
-### Build and copy the site
+1. checks out the repository;
+2. provisions Python 3.11;
+3. builds the active configuration;
+4. builds the example configuration to keep the reusable sample honest; and
+5. uploads the active `dist/` directory as a workflow artifact.
+
+The workflow does **not** deploy anything. That keeps validation useful to anyone who creates a repository from this template while leaving deployment opt-in.
+
+The uploaded artifact is also a useful foundation for later CI/CD: a deployment job can promote the exact artifact that passed the build instead of rebuilding it somewhere else.
+
+## Deployment model
+
+The included deployment helpers use immutable release directories plus an atomic `current` symlink:
+
+```text
+/var/www/resume.example.com/
+├── releases/
+│   ├── <release-id>/
+│   └── <another-release-id>/
+└── current -> releases/<release-id>
+```
+
+Apache serves `current`. A deployment copies a complete new release first and only then switches the symlink. That avoids exposing a half-copied site and makes rollback a symlink change rather than a reconstruction exercise.
+
+### Prepare the web root
+
+Do this once, using an account that will own deployments:
+
+```bash
+sudo install -d -o <deploy-user> -g www-data -m 2755 /var/www/resume.example.com
+sudo install -d -o <deploy-user> -g www-data -m 2755 /var/www/resume.example.com/releases
+```
+
+### Manual build and publish
+
+On the deployment host:
 
 ```bash
 ./deploy/deploy.sh
 ```
 
-The script reads the hostname from `site.json` and, by default, deploys to:
+By default the script derives the host from `site.json`, builds `dist/`, uses the current Git commit as the release ID, publishes it under `/var/www/<hostname>/releases/`, and atomically moves `current`.
 
-```text
-/var/www/<hostname>
-```
-
-For this repository that becomes:
-
-```text
-/var/www/resume.tomgigler.com
-```
-
-You can override the destination:
+Override the deployment root if needed:
 
 ```bash
 ./deploy/deploy.sh /some/other/path
 ```
+
+`deploy/publish.sh` is the lower-level primitive. It publishes an already-built directory without rebuilding it:
+
+```bash
+./deploy/publish.sh <built-site-dir> <deploy-root> <release-id>
+```
+
+That distinction is intentional: future CI/CD can build once, transfer `dist/`, and publish exactly what was validated.
 
 ### Generate an Apache virtual host
 
@@ -149,7 +149,7 @@ You can override the destination:
 python3 deploy/render_apache.py
 ```
 
-To install it directly:
+The generated configuration serves `/var/www/<hostname>/current` by default. To install it:
 
 ```bash
 python3 deploy/render_apache.py | sudo tee /etc/apache2/sites-available/resume.conf
@@ -158,26 +158,26 @@ sudo apache2ctl configtest
 sudo systemctl reload apache2
 ```
 
-Once DNS points to the server and HTTP is working, add HTTPS using the server's normal certificate tooling.
+Once DNS points to the server and HTTP works, add HTTPS using the host's normal certificate tooling.
 
-`deploy/apache.conf.example` shows the resulting configuration with generic values.
+## Keeping the template generic while deploying a real resume
 
-## Continuous build check
+A useful maintenance pattern is:
 
-`.github/workflows/build.yml` builds the site on every push and pull request. It does not deploy anything; it simply catches broken JSON, bad configuration, or build-script errors before they land unnoticed.
+```text
+main                 reusable template/example data
+site-specific branch real resume.json + site.json
+```
 
-## Reusing this repository
+Both branches can use the same builder and validation workflow. A later deployment workflow can be restricted to the site-specific branch.
 
-The easiest reuse path is:
+This is organizational separation, **not privacy**. In a public repository, data on another branch remains public and discoverable.
 
-1. Create a new repository from this one, or fork/clone it.
-2. Copy `resume.example.json` over `resume.json` and fill in your information.
-3. Copy `site.example.json` over `site.json` and set your URL and presentation options.
-4. Run `python3 build.py`.
-5. Preview `dist/` locally.
-6. Deploy the contents of `dist/` to any static web host.
+## Using this repository as a template
 
-If this repository is made public, GitHub's **Template repository** setting is a particularly clean way to let other people create their own copy without inheriting this repository's commit history.
+On GitHub, enable **Settings → General → Template repository**. New repositories created with **Use this template** get a fresh Git history rather than becoming forks.
+
+The default branch is deliberately generic so the normal template experience does not copy someone else's resume content.
 
 ## Repository layout
 
@@ -185,8 +185,10 @@ If this repository is made public, GitHub's **Template repository** setting is a
 .
 ├── .github/workflows/build.yml
 ├── .gitignore
+├── DESIGN.md
 ├── LICENSE
 ├── README.md
+├── SCHEMA.md
 ├── build.py
 ├── resume.example.json
 ├── resume.json
@@ -195,16 +197,17 @@ If this repository is made public, GitHub's **Template repository** setting is a
 ├── deploy/
 │   ├── apache.conf.example
 │   ├── deploy.sh
+│   ├── publish.sh
 │   └── render_apache.py
 ├── static/
-│   ├── favicon.svg
 │   ├── print.css
 │   └── styles.css
 └── template/
     ├── 404.html
+    ├── favicon.svg
     └── index.html
 ```
 
 ## License
 
-MIT. See `LICENSE`.
+MIT. See [LICENSE](LICENSE).

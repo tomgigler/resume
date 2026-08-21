@@ -197,3 +197,37 @@ footer p { margin: 0; }
   .dates { margin-top: 5px; }
   .projects { grid-template-columns: 1fr; }
 }
+
+.supporting-link {
+  white-space: nowrap;
+  color: var(--muted);
+  font-size: 0.92em;
+}
+
+.skill-groups {
+  display: grid;
+  gap: 8px;
+}
+
+.skill-group {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.8fr) 2fr;
+  gap: 18px;
+  align-items: baseline;
+}
+
+.skill-group-label {
+  color: var(--muted);
+  font-weight: 650;
+}
+
+.skill-group-items {
+  min-width: 0;
+}
+
+@media (max-width: 760px) {
+  .skill-group {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+}

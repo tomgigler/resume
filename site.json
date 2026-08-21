@@ -1,16 +1,17 @@
 {
-  "url": "https://resume.tomgigler.com",
-  "pageTitle": "Tom Gigler | Resume",
-  "description": "Resume and professional background for Tom Gigler.",
+  "url": "https://resume.example.com",
+  "pageTitle": "Alex Example | Resume",
+  "description": "Resume and professional background for Alex Example.",
   "accentColor": "#214f7b",
+  "faviconText": "R",
   "showPrintButton": true,
   "printButtonLabel": "Print / Save PDF",
-  "lastUpdated": "August 2026",
+  "lastUpdated": "",
   "sections": ["summary", "experience", "projects", "skills", "education"],
   "sectionLabels": {
     "summary": "Professional Summary",
     "experience": "Experience",
-    "projects": "Selected Technical Work",
+    "projects": "Selected Projects",
     "skills": "Core Technologies",
     "education": "Education"
   }

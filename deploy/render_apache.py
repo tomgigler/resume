@@ -24,14 +24,14 @@ host = urlparse(site["url"]).hostname or ""
 if not HOSTNAME.fullmatch(host):
     raise SystemExit("site.json contains an invalid hostname")
 
-document_root = args.document_root or f"/var/www/{host}"
+document_root = args.document_root or f"/var/www/{host}/current"
 
 print(f"""<VirtualHost *:80>
     ServerName {host}
     DocumentRoot {document_root}
 
     <Directory {document_root}>
-        Options -Indexes
+        Options -Indexes +FollowSymLinks
         AllowOverride None
         Require all granted
     </Directory>

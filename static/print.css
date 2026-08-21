@@ -42,3 +42,12 @@ li + li { margin-top: 3pt; }
 .projects article + article { margin-top: 5pt; }
 footer { display: none; }
 a { color: #000; text-decoration: none; }
+
+.supporting-link { font-size: 0.9em; }
+.skill-groups { gap: 3pt; }
+.skill-group {
+  display: grid;
+  grid-template-columns: 1.35in 1fr;
+  gap: 8pt;
+}
+.skill-group-label { font-weight: 700; }

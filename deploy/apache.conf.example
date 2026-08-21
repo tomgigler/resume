@@ -2,14 +2,15 @@
 #
 #   python3 deploy/render_apache.py
 #
-# Example:
+# The default deployment model serves an atomic "current" symlink that points
+# at one immutable release directory.
 
 <VirtualHost *:80>
     ServerName resume.example.com
-    DocumentRoot /var/www/resume.example.com
+    DocumentRoot /var/www/resume.example.com/current
 
-    <Directory /var/www/resume.example.com>
-        Options -Indexes
+    <Directory /var/www/resume.example.com/current>
+        Options -Indexes +FollowSymLinks
         AllowOverride None
         Require all granted
     </Directory>

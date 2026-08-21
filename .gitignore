@@ -1,15 +1,17 @@
-# Generated site
+# Generated sites
 /dist/
+/dist-example/
+
+# Python environments / caches
+.venv/
+__pycache__/
+*.py[cod]
 
 # OS / editor noise
 .DS_Store
 Thumbs.db
 .vscode/
 .idea/
-
-# Python
-__pycache__/
-*.py[cod]
 
 # Local scratch files
 *.tmp

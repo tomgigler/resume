@@ -16,16 +16,11 @@ print(host)
 PY
 )"
 
-DEST_DIR="${1:-/var/www/$HOSTNAME}"
+DEPLOY_ROOT="${1:-/var/www/$HOSTNAME}"
+RELEASE_ID="${RELEASE_ID:-$(git -C "$ROOT" rev-parse HEAD 2>/dev/null || date -u +%Y%m%d%H%M%S)}"
 
 echo "Building site..."
 "$PYTHON" "$ROOT/build.py"
 
-echo "Deploying to $DEST_DIR..."
-sudo mkdir -p "$DEST_DIR"
-sudo rsync -a --delete "$ROOT/dist/" "$DEST_DIR/"
-sudo chown -R root:www-data "$DEST_DIR"
-sudo find "$DEST_DIR" -type d -exec chmod 755 {} \;
-sudo find "$DEST_DIR" -type f -exec chmod 644 {} \;
-
-echo "Deployment complete: $DEST_DIR"
+echo "Publishing release $RELEASE_ID to $DEPLOY_ROOT..."
+"$ROOT/deploy/publish.sh" "$ROOT/dist" "$DEPLOY_ROOT" "$RELEASE_ID"

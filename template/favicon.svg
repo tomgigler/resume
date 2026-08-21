@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Resume favicon">
+  <rect width="64" height="64" rx="12" fill="{{ACCENT_COLOR}}"/>
+  <text
+    x="32"
+    y="45"
+    text-anchor="middle"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="{{FAVICON_FONT_SIZE}}"
+    font-weight="700"
+    fill="#fff">{{FAVICON_TEXT}}</text>
+</svg>

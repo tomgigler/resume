@@ -6,19 +6,40 @@
     "email": "alex@example.com",
     "location": "City, State",
     "links": [
-      { "label": "GitHub", "url": "https://github.com/example" },
-      { "label": "LinkedIn", "url": "https://www.linkedin.com/in/example" }
+      {
+        "label": "GitHub",
+        "url": "https://github.com/example"
+      },
+      {
+        "label": "LinkedIn",
+        "url": "https://www.linkedin.com/in/example"
+      }
     ]
   },
-  "summary": "A concise professional summary goes here.",
+  "summary": "A concise professional summary goes here. Use it to establish the themes that the experience section then proves with concrete examples.",
   "experience": [
     {
       "company": "Example Company",
       "title": "Senior Software Engineer",
       "dates": "2022–Present",
       "bullets": [
-        "Describe an outcome, not merely a responsibility.",
-        "Use concrete scope or impact when it can be shared publicly."
+        {
+          "text": "Designed a reusable internal tool that separated configuration from implementation so teams could adopt it without maintaining custom forks.",
+          "link": {
+            "label": "View supporting work",
+            "url": "https://example.com/project"
+          }
+        },
+        "Improved a recurring engineering workflow by replacing manual steps with tested automation and documented ownership."
+      ]
+    },
+    {
+      "company": "Previous Company",
+      "title": "Software Engineer",
+      "dates": "2018–2022",
+      "bullets": [
+        "Built and maintained developer tooling used across multiple engineering teams.",
+        "Partnered with developers and operations teams to improve reliability, repeatability, and developer experience."
       ]
     }
   ],
@@ -26,16 +47,35 @@
     {
       "name": "Example Project",
       "url": "https://github.com/example/project",
-      "description": "One or two sentences describing why the project matters."
+      "description": "A public project that demonstrates relevant engineering decisions and provides supporting evidence for the resume."
     }
   ],
-  "skills": ["Python", "Git", "Linux"],
+  "skills": [
+    {
+      "label": "Platform & Tooling",
+      "items": ["Git", "CI/CD", "Developer Tooling"]
+    },
+    {
+      "label": "Languages & Scripting",
+      "items": ["Python", "PowerShell"]
+    },
+    {
+      "label": "Engineering Focus",
+      "items": ["Automation", "Platform Engineering", "Developer Experience"]
+    }
+  ],
   "education": [
     {
       "school": "Example University",
       "degree": "B.S., Computer Science",
-      "dates": "2022",
-      "detail": ""
+      "dates": "2018",
+      "detail": {
+        "text": "Capstone project later used as a teaching example in the department.",
+        "link": {
+          "label": "University archive",
+          "url": "https://example.edu/archive/project"
+        }
+      }
     }
   ]
 }
