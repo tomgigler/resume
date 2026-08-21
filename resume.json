@@ -3,16 +3,16 @@
   "eyebrow": "Software Engineering · Developer Experience · Automation",
   "headline": "Senior Software Engineer",
   "contact": {
-    "email": "alex@example.com",
-    "location": "City, State",
+    "email": "tomgigler@google.com",
+    "location": "Redlands, CA",
     "links": [
       {
         "label": "GitHub",
-        "url": "https://github.com/example"
+        "url": "https://github.com/tomgigler"
       },
       {
         "label": "LinkedIn",
-        "url": "https://www.linkedin.com/in/example"
+        "url": "https://www.linkedin.com/in/tomgigler/"
       }
     ]
   },
