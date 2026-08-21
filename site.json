@@ -1,0 +1,17 @@
+{
+  "url": "https://resume.tomgigler.com",
+  "pageTitle": "Tom Gigler | Resume",
+  "description": "Resume and professional background for Tom Gigler.",
+  "accentColor": "#214f7b",
+  "showPrintButton": true,
+  "printButtonLabel": "Print / Save PDF",
+  "lastUpdated": "August 2026",
+  "sections": ["summary", "experience", "projects", "skills", "education"],
+  "sectionLabels": {
+    "summary": "Professional Summary",
+    "experience": "Experience",
+    "projects": "Selected Technical Work",
+    "skills": "Core Technologies",
+    "education": "Education"
+  }
+}

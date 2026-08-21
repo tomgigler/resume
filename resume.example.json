@@ -1,0 +1,41 @@
+{
+  "name": "Alex Example",
+  "eyebrow": "Software Engineering · Developer Experience · Automation",
+  "headline": "Senior Software Engineer",
+  "contact": {
+    "email": "alex@example.com",
+    "location": "City, State",
+    "links": [
+      { "label": "GitHub", "url": "https://github.com/example" },
+      { "label": "LinkedIn", "url": "https://www.linkedin.com/in/example" }
+    ]
+  },
+  "summary": "A concise professional summary goes here.",
+  "experience": [
+    {
+      "company": "Example Company",
+      "title": "Senior Software Engineer",
+      "dates": "2022–Present",
+      "bullets": [
+        "Describe an outcome, not merely a responsibility.",
+        "Use concrete scope or impact when it can be shared publicly."
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "name": "Example Project",
+      "url": "https://github.com/example/project",
+      "description": "One or two sentences describing why the project matters."
+    }
+  ],
+  "skills": ["Python", "Git", "Linux"],
+  "education": [
+    {
+      "school": "Example University",
+      "degree": "B.S., Computer Science",
+      "dates": "2022",
+      "detail": ""
+    }
+  ]
+}

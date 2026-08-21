@@ -1,0 +1,21 @@
+# This file is documentation only. For a real config generated from site.json, run:
+#
+#   python3 deploy/render_apache.py
+#
+# Example:
+
+<VirtualHost *:80>
+    ServerName resume.example.com
+    DocumentRoot /var/www/resume.example.com
+
+    <Directory /var/www/resume.example.com>
+        Options -Indexes
+        AllowOverride None
+        Require all granted
+    </Directory>
+
+    ErrorDocument 404 /404.html
+
+    ErrorLog ${APACHE_LOG_DIR}/resume.example.com-error.log
+    CustomLog ${APACHE_LOG_DIR}/resume.example.com-access.log combined
+</VirtualHost>

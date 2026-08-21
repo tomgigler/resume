@@ -1,6 +1,16 @@
+# Generated site
+/dist/
+
+# OS / editor noise
 .DS_Store
 Thumbs.db
 .vscode/
 .idea/
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Local scratch files
 *.tmp
 *.bak

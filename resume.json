@@ -1,0 +1,88 @@
+{
+  "name": "Tom Gigler",
+  "eyebrow": "Platform Engineering · Developer Infrastructure · CI/CD",
+  "headline": "Platform Engineering Manager",
+  "contact": {
+    "email": "",
+    "location": "",
+    "links": [
+      {
+        "label": "GitHub",
+        "url": "https://github.com/tomgigler"
+      }
+    ]
+  },
+  "summary": "Platform engineering leader with more than two decades of experience building and improving developer infrastructure, build and release systems, source-control workflows, CI/CD platforms, and internal engineering tools. Progressed from hands-on build engineering through technical leadership into engineering management while remaining closely involved in the design and operation of the systems used by development teams.",
+  "experience": [
+    {
+      "company": "[Company Name]",
+      "title": "Platform Engineering Manager",
+      "dates": "[Year]–Present",
+      "bullets": [
+        "Lead a platform engineering team responsible for developer infrastructure and engineering productivity across build, CI/CD, artifact management, and source control.",
+        "Support engineering workflows built around Git, GitHub Enterprise, Jenkins, GitHub Actions, artifact management, package management, and internal developer tooling.",
+        "Emphasize durable ownership within the team so engineers can lead systems, onboard others, and make decisions without unnecessary management bottlenecks."
+      ]
+    },
+    {
+      "company": "[Company Name]",
+      "title": "Build Engineer → Senior Build Engineer → Lead Build Engineer",
+      "dates": "[Year]–[Year]",
+      "bullets": [
+        "Built and maintained release and build systems for major software products across Windows and Unix-like environments.",
+        "Designed dependency and build tooling that simplified large, interdependent codebases and materially reduced build time.",
+        "Worked across development, QA, release engineering, and infrastructure teams to improve reliability, repeatability, and developer experience."
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "name": "GiggleCheckBox",
+      "url": "https://github.com/tomgigler/GiggleCheckBox",
+      "description": "Reusable checklist system built around templates, runs, locations, assets, dependencies, tags, attachments, and auditable checklist activity."
+    },
+    {
+      "name": "GiggleMe",
+      "url": "https://github.com/tomgigler/GiggleMe",
+      "description": "Long-running Discord automation project with scheduled content, templates, database-backed workflows, web tooling, and service-based deployment."
+    },
+    {
+      "name": "GiggleMod",
+      "url": "https://github.com/tomgigler/GiggleMod",
+      "description": "Discord moderation tooling focused on maintainability, service deployment, and modern command workflows."
+    }
+  ],
+  "skills": [
+    "Git",
+    "GitHub",
+    "GitHub Enterprise",
+    "Jenkins",
+    "GitHub Actions",
+    "Artifactory",
+    "Maven",
+    "NuGet",
+    "Python",
+    "PowerShell",
+    "MySQL",
+    "Linux",
+    "Windows",
+    "CI/CD",
+    "Build Engineering",
+    "Developer Tooling",
+    "Platform Engineering"
+  ],
+  "education": [
+    {
+      "school": "[California State University campus]",
+      "degree": "M.S., Computer Science",
+      "dates": "[Year]",
+      "detail": ""
+    },
+    {
+      "school": "[California State University campus]",
+      "degree": "B.S., Computer Science, with honors",
+      "dates": "[Year]",
+      "detail": "Outstanding Undergraduate Student, Computer Science"
+    }
+  ]
+}
