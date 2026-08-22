@@ -1,7 +1,7 @@
 {
-  "name": "Alex Example",
-  "eyebrow": "Software Engineering · Developer Experience · Automation",
-  "headline": "Senior Software Engineer",
+  "name": "Tom Gigler",
+  "eyebrow": "Platform Engineering · Developer Infrastructure · CI/CD",
+  "headline": "Platform Engineering Manager",
   "contact": {
     "email": "tomgigler@google.com",
     "location": "Redlands, CA",
@@ -16,7 +16,7 @@
       }
     ]
   },
-  "summary": "A concise professional summary goes here. Use it to establish the themes that the experience section then proves with concrete examples.",
+  "summary": "Platform engineering leader with more than two decades of experience building and improving developer infrastructure, build and release systems, source-control workflows, CI/CD platforms, and internal engineering tools. Progressed from hands-on build engineering through technical leadership into engineering management while remaining closely involved in the design and operation of the systems used by development teams.",
   "experience": [
     {
       "company": "Esri",
